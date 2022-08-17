@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/main.deee38a9.css","mappings":"AAAA,KACE,gBAAiB,CACjB,WACF,CAEA,UACE,WACF,CAEA,UACE,cACF","sources":["App.css"],"sourcesContent":[".App {\n  min-height: 100vh;\n  padding: 8px;\n}\n\n.nav-logo {\n  width: 100px;\n}\n\n.nav-item {\n  cursor: pointer;\n}\n"],"names":[],"sourceRoot":""}
