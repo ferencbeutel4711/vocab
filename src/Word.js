@@ -38,10 +38,10 @@ class Word extends React.Component {
         }
 
         return (
-            <Paper sx={{bgcolor: this.getBackground(this.state.validationStatus), marginTop: '8px'}} elevation={this.state.solvable ? this.state.elevation : 2}
+            <Paper sx={{bgcolor: this.getBackground(this.state.validationStatus), marginTop: '4px'}} elevation={this.state.solvable ? this.state.elevation : 2}
                    onMouseOut={() => this.setState({elevation: 2})}
                    onMouseOver={() => this.setState({elevation: 3})}>
-                <Grid2 sx={{alignItems: 'center', padding: '8px', minHeight: '56px'}} container key={this.props.word.english + this.props.word.german}>
+                <Grid2 sx={{alignItems: 'center', padding: '4px', minHeight: '48px'}} container key={this.props.word.english + this.props.word.german}>
                     <Grid2 xs={4}>
                         <Tooltip enterTouchDelay={0}
                                  title={this.props.word.categories.length > 0 ? this.props.word.categories.map((category) => <p key={category}>{category}</p>) : 'no categories'}>

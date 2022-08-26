@@ -224,7 +224,7 @@ class App extends React.Component {
                             {Object.keys(this.state.vocabulary.units).map((unit) =>
                                 <Container key={unit}>
                                     <Grid2 xs={12} display="flex" justifyContent="center">
-                                        <Typography variant="h4" sx={{marginTop: '32px'}}>
+                                        <Typography variant="h5" sx={{marginTop: '32px'}}>
                                             {this.state.vocabulary.units[unit].name} ({this.state.vocabulary.units[unit].words.filter((word) => dayjs().isAfter(word.solveAt)).length})
                                         </Typography>
                                     </Grid2>
