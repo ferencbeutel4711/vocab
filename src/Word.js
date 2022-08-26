@@ -2,7 +2,7 @@ import './Word.css';
 import React from "react";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import {Paper, TextField, Tooltip, Typography} from "@mui/material";
-import {ArrowDownwardOutlined, ArrowUpwardOutlined, EditOutlined, PublishedWithChangesOutlined} from "@mui/icons-material";
+import {ArrowDownwardOutlined, ArrowLeftOutlined, ArrowUpwardOutlined, EditOutlined, PublishedWithChangesOutlined} from "@mui/icons-material";
 import dayjs from "dayjs";
 
 class Word extends React.Component {
@@ -23,18 +23,48 @@ class Word extends React.Component {
                 return 'success.dark';
             case 'error':
                 return 'error.dark';
+            case 'warning':
+                return 'warning.dark';
             default:
                 return this.state.solvable ? 'background.paper' : 'action.disabled';
         }
     }
 
     render() {
+        const isMajorMistake = () => {
+            return this.state.translation !== this.props.word.german;
+        }
+
+        const isArticle = (word) => ['der', 'die', 'das'].includes(word);
+
+        const isMinorMistake = () => {
+            if (this.state.translation === this.props.word.german) return false;
+
+            const correctWords = this.props.word.german.split(' ');
+            const translationWords = this.state.translation.split(' ');
+
+            if (correctWords.length > 1 && !isArticle(correctWords[0])) return this.state.translation.toLowerCase() === this.props.word.german.toLowerCase();
+            if (translationWords.length > 1) return translationWords[1].toLowerCase() === correctWords[1].toLowerCase();
+
+            return translationWords[0].toLowerCase() === correctWords[correctWords.length - 1].toLowerCase();
+        }
+
         const validate = () => {
-            if (this.state.translation === this.props.word.german) {
-                this.setState({validationStatus: 'success'});
-            } else {
+            if (isMinorMistake()) {
+                this.setState({validationStatus: 'warning'});
+            } else if (isMajorMistake()) {
                 this.setState({validationStatus: 'error'});
+            } else {
+                this.setState({validationStatus: 'success'});
             }
+        }
+
+        const actionButtonTooltip = () => {
+            if (this.state.validationStatus === '') return 'validate';
+            else if (this.state.validationStatus === 'success') return 'move word down';
+            else if (this.state.validationStatus === 'error') return 'move word up';
+            else if (this.state.validationStatus === 'warning') return 'keep word';
+            else return '';
         }
 
         return (
@@ -59,10 +89,11 @@ class Word extends React.Component {
                     <Grid2 xs={1}/>
                     <Grid2 sx={{alignItems: 'center', height: '24px'}} xs={3}>
                         {this.state.solvable ?
-                            <Tooltip enterTouchDelay={0} title="validate">
+                            <Tooltip enterTouchDelay={0} title={actionButtonTooltip()}>
                                 {this.state.validationStatus === '' ? <PublishedWithChangesOutlined onClick={validate}/>
                                     : this.state.validationStatus === 'success' ? <ArrowDownwardOutlined onClick={this.props.promoteWord}/>
-                                        : <ArrowUpwardOutlined onClick={this.props.demoteWord}/>
+                                        : this.state.validationStatus === 'error' ? <ArrowUpwardOutlined onClick={this.props.demoteWord}/>
+                                            : <ArrowLeftOutlined onClick={this.props.keepWord}/>
                                 }
                             </Tooltip>
                             : <div style={{width: '24px', height: '1px', display: 'inline-block'}}/>

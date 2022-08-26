@@ -191,11 +191,23 @@ class App extends React.Component {
         }
 
         const demoteWord = (word, unit) => {
-            const newWord = {...word, solveAt: dayjs().add(unitConfig[unitConfig[unit].promotion].downtime.value, unitConfig[unitConfig[unit].promotion].downtime.unit)};
+            const newWord = {...word, solveAt: dayjs().add(unitConfig[unitConfig[unit].demotion].downtime.value, unitConfig[unitConfig[unit].demotion].downtime.unit)};
 
             const newState = produce(this.state, draft => {
                 draft.vocabulary.units[unit].words = draft.vocabulary.units[unit].words.filter((w) => w.english !== word.english && w.german !== word.german);
                 draft.vocabulary.units[unitConfig[unit].demotion].words.push(newWord);
+            });
+
+            this.setState(newState);
+            saveVocabulary(newState.vocabulary);
+        }
+
+        const keepWord = (word, unit) => {
+            const newWord = {...word, solveAt: dayjs().add(unitConfig[unit].downtime.value, unitConfig[unit].downtime.unit)};
+
+            const newState = produce(this.state, draft => {
+                draft.vocabulary.units[unit].words = draft.vocabulary.units[unit].words.filter((w) => w.english !== word.english && w.german !== word.german);
+                draft.vocabulary.units[unit].words.push(newWord);
             });
 
             this.setState(newState);
@@ -235,6 +247,7 @@ class App extends React.Component {
                                                 word={word}
                                                 promoteWord={() => promoteWord(word, unit)}
                                                 demoteWord={() => demoteWord(word, unit)}
+                                                keepWord={() => keepWord(word, unit)}
                                                 editWord={() => editWord(word, unit)}
                                                 key={word.english + word.german}
                                             />
